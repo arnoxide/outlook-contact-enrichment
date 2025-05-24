@@ -1,0 +1,36 @@
+{
+    "name": "outlook-contact-enrichment-backend",
+    "version": "1.0.0",
+    "description": "Backend API for Outlook Contact Enrichment Add-in",
+    "main": "src/index.js",
+    "scripts": {
+      "start": "node src/index.js",
+      "dev": "node src/index.js",
+      "test": "jest"
+    },
+    "dependencies": {
+      "express": "^4.18.2",
+      "cors": "^2.8.5",
+      "helmet": "^7.0.0",
+      "bcrypt": "^5.1.0",
+      "jsonwebtoken": "^9.0.1",
+      "pg": "^8.11.0",
+      "pg-pool": "^3.6.0",
+      "dotenv": "^16.3.1",
+      "express-rate-limit": "^6.7.1",
+      "express-validator": "^7.0.1"
+    },
+    "devDependencies": {
+      "nodemon": "^3.0.1",
+      "jest": "^29.6.1"
+    },
+    "keywords": [
+      "outlook",
+      "office-js",
+      "contact-enrichment",
+      "jwt",
+      "express"
+    ],
+    "author": "Arnold",
+    "license": "MIT"
+  }

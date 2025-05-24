@@ -1,0 +1,38 @@
+{
+    "name": "outlook-contact-enrichment-frontend",
+    "version": "1.0.0",
+    "description": "Frontend for Outlook Contact Enrichment Add-in",
+    "main": "src/index.html",
+    "scripts": {
+      "start": "http-server src -p 3001 -c-1 --cors",
+      "build": "echo 'Static files ready for production'",
+      "dev": "http-server src -p 3001 -c-1 --cors -o",
+      "lint": "eslint src/app.js",
+      "validate": "office-addin-manifest validate src/manifest.xml"
+    },
+    "keywords": [
+      "outlook",
+      "office-add-in",
+      "contact-enrichment",
+      "javascript"
+    ],
+    "author": "Contact Enrichment Solutions",
+    "license": "MIT",
+    "devDependencies": {
+      "eslint": "^8.0.0",
+      "http-server": "^14.1.1",
+      "office-addin-manifest": "^1.12.0"
+    },
+    "dependencies": {},
+    "engines": {
+      "node": ">=14.0.0"
+    },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/arnoxide/outlook-contact-enrichment"
+    },
+    "bugs": {
+      "url": "https://github.com/arnoxide/outlook-contact-enrichment/issues"
+    },
+    "homepage": "https://github.com/arnoxide/outlook-contact-enrichment#readme"
+  }

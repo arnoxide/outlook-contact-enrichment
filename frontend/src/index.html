@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Enrichment Add-in</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js" type="text/javascript"></script>
+    <script>
+        // Office.js initialization
+        Office.onReady(() => {
+            console.log('Commands page loaded');
+        });
+
+        // Command functions that can be called from the ribbon
+        function showContactEnrichment(event) {
+            // This function would be called when the ribbon button is clicked
+            // In this implementation, we'll just complete the event
+            // The actual functionality is handled in the main taskpane
+            event.completed();
+        }
+
+        // Make functions available globally for Office.js
+        window.showContactEnrichment = showContactEnrichment;
+    </script>
+</head>
+<body>
+    <div id="app">
+        <!-- Login Form -->
+        <div id="loginContainer" class="container">
+            <div class="header">
+                <h2>Contact Enrichment</h2>
+                <p>Sign in to access contact information</p>
+            </div>
+            
+            <form id="loginForm" class="form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                </div>
+                
+                <button type="submit" class="btn btn-primary" id="loginBtn">
+                    <span class="btn-text">Sign In</span>
+                    <span class="spinner" id="loginSpinner"></span>
+                </button>
+                
+                <div id="loginError" class="error-message"></div>
+            </form>
+        </div>
+
+        <!-- Main Application -->
+        <div id="mainContainer" class="container hidden">
+            <div class="header">
+                <h2>Contact Information</h2>
+                <button id="logoutBtn" class="btn btn-secondary btn-small">Logout</button>
+            </div>
+            
+            <!-- Email Context Display -->
+            <div class="email-context">
+                <h3>Current Email</h3>
+                <div id="emailInfo" class="email-info">
+                    <div class="info-item">
+                        <label>From:</label>
+                        <span id="senderEmail">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Subject:</label>
+                        <span id="emailSubject">Loading...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Enrichment Section -->
+            <div class="contact-section">
+                <div class="section-header">
+                    <h3>Contact Details</h3>
+                    <button id="refreshBtn" class="btn btn-secondary btn-small">
+                        <span class="refresh-icon">↻</span> Refresh
+                    </button>
+                </div>
+                
+                <div id="contactInfo" class="contact-info">
+                    <div class="loading-state" id="contactLoading">
+                        <div class="spinner large"></div>
+                        <p>Fetching contact information...</p>
+                    </div>
+                    
+                    <div id="contactDetails" class="contact-details hidden">
+                        <div class="contact-card">
+                            <div class="contact-avatar">
+                                <span id="contactInitials"></span>
+                            </div>
+                            <div class="contact-data">
+                                <h4 id="contactName">-</h4>
+                                <p id="contactTitle">-</p>
+                                <div class="contact-fields">
+                                    <div class="field-group">
+                                        <label>Department:</label>
+                                        <span id="contactDepartment">-</span>
+                                    </div>
+                                    <div class="field-group">
+                                        <label>Phone:</label>
+                                        <span id="contactPhone">-</span>
+                                    </div>
+                                    <div class="field-group">
+                                        <label>Email:</label>
+                                        <span id="contactEmail">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="contactError" class="error-state hidden">
+                        <div class="error-icon">⚠</div>
+                        <h4>Unable to fetch contact information</h4>
+                        <p id="contactErrorMessage">Please try again later.</p>
+                        <button id="retryBtn" class="btn btn-primary btn-small">Retry</button>
+                    </div>
+                    
+                    <div id="noContactInfo" class="no-data-state hidden">
+                        <div class="no-data-icon">👤</div>
+                        <h4>No additional information available</h4>
+                        <p>Contact details not found for this sender.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
