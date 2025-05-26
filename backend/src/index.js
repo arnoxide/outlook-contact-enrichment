@@ -5,9 +5,26 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const app = express();
+app.options('*', cors());
 app.use(cors({
-    origin: ['http://localhost:8080', 'http://frontend:3001'],
-    methods: ['GET', 'POST'],
+    origin: (origin, callback) => {
+        const allowedOrigins = [
+            'http://localhost:8081',
+            'http://localhost:8080',
+            'http://frontend:3001',
+            'http://172.19.0.4:3001',
+            'https://outlook.office.com',
+            'https://outlook.live.com',
+            'https://bc89-41-121-114-146.ngrok-free.app'
+        ];
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, origin || '*');
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
 app.use(express.json());

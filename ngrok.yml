@@ -1,0 +1,7 @@
+version: "2"
+authtoken: 2xdiTopAm4UCDa6giLB7HSmaTVn_3xqYWm3stgdMs2Vik8J7v
+tunnels:
+  proxy:
+    addr: 8081
+    proto: http
+    hostname: bc89-41-121-114-146.ngrok-free.app

@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   db:
     image: postgres:15
@@ -27,7 +28,7 @@ services:
     container_name: outlook_backend
     environment:
       - DATABASE_URL=postgresql://user:2sRuF9%5C3QG5%40@db:5432/contact_enrichment
-      - JWT_SECRET=a9b9b62aff6465615bc3ee2e683b22a361fc31f48a5a3c03358f4d3f694c09801c4aad5f1a3a09320a4f2cd5f38e6597e58b1983185574873e522fa6195097e685e2912afb14e40859df7737bbb678401b5ecef3ed9f4916e66d0e142e6ba11dba0cc5254b6af7e2f74d70eca13f308fb26963e030afcd6dc2e2f42d6489cb4c49c34e8167e9bf16c5a07fca7f6a3060a5eeb24c157ed1acaf2db36ac7b3238701fb4b2d6584e39b131d7e3658f17bcbc362cf63eca4a8c8f3db925b8d16cf020cfee881ac92fd4a2e3f04eebfc9c11d86e126d877a50629ba6826726bea8767b84fff5aad96bd27f74a82ad944510ffe92426b48edda9b10c37e2f0f63e1045
+      - JWT_SECRET=your_jwt_secret_here
       - PORT=3000
       - NODE_ENV=development
     ports:
@@ -48,11 +49,36 @@ services:
       dockerfile: Dockerfile
     container_name: outlook_frontend
     ports:
-      - "8080:3001"
+      - "3001:3001"
     networks:
       - outlook_network
     depends_on:
       - backend
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: outlook_ngrok
+    volumes:
+      - ./ngrok.yml:/etc/ngrok.yml
+    depends_on:
+      - proxy
+    command: ["start", "--all", "--config", "/etc/ngrok.yml"]
+    networks:
+      - outlook_network
+
+  proxy:
+    image: nginx:latest
+    container_name: outlook_proxy
+    ports:
+      - "8081:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - outlook_network
+    depends_on:
+      - frontend
+      - backend
+
 
 volumes:
   postgres_data:

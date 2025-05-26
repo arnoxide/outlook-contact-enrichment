@@ -1,6 +1,6 @@
 // Configuration
 const CONFIG = {
-    API_BASE_URL: 'http://localhost:3000/api',
+    API_BASE_URL: 'https://bc89-41-121-114-146.ngrok-free.app/api',
     DEMO_MODE: true,
     DEMO_EMAIL: 'admin@example.com',
     DEMO_SUBJECT: 'Project Update - Q4 Planning'
@@ -216,16 +216,22 @@ function showMainContainer() {
 // Load email context
 async function loadEmailContext() {
     if (CONFIG.DEMO_MODE) {
-        // Demo mode - use sample data
         updateEmailDisplay(CONFIG.DEMO_EMAIL, CONFIG.DEMO_SUBJECT);
+        loadContactInfo(CONFIG.DEMO_EMAIL);
     } else {
-        // Real Office.js mode
         try {
             Office.context.mailbox.item.from.getAsync((result) => {
                 if (result.status === Office.AsyncResultStatus.Succeeded) {
                     const senderEmail = result.value.emailAddress;
-                    const subject = Office.context.mailbox.item.subject;
-                    updateEmailDisplay(senderEmail, subject);
+                    Office.context.mailbox.item.subject.getAsync((subjectResult) => {
+                        if (subjectResult.status === Office.AsyncResultStatus.Succeeded) {
+                            updateEmailDisplay(senderEmail, subjectResult.value);
+                        } else {
+                            console.error('Failed to get subject:', subjectResult.error);
+                            updateEmailDisplay(senderEmail, 'Unable to retrieve subject');
+                        }
+                        loadContactInfo(senderEmail);
+                    });
                 } else {
                     console.error('Failed to get sender email:', result.error);
                     updateEmailDisplay('Unable to retrieve sender', 'Unable to retrieve subject');
@@ -249,10 +255,9 @@ function updateEmailDisplay(email, subject) {
 }
 
 // Load contact information
-async function loadContactInfo() {
-    const senderEmail = CONFIG.DEMO_MODE ? CONFIG.DEMO_EMAIL : getCurrentSenderEmail();
-    
-    if (!senderEmail) {
+async function loadContactInfo(senderEmail = null) {
+    const email = senderEmail || getCurrentSenderEmail();
+    if (!email) {
         showNoContactInfo('Unable to determine sender email');
         return;
     }
@@ -266,7 +271,7 @@ async function loadContactInfo() {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${authToken}`
             },
-            body: JSON.stringify({ email: senderEmail })
+            body: JSON.stringify({ email })
         });
         
         const data = await response.json();
